@@ -1,0 +1,64 @@
+<style type="text/css">
+.links-list {
+  font-size: 0;
+  text-align: center;
+
+  & .link-item {
+    margin: 1.5rem auto;
+    display: inline-block;
+    width: 25%;
+    box-sizing: border-box;
+
+    & + .link-item {
+      padding-left: 1rem;
+    }
+
+    & .link-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid $media-border;
+      box-shadow: 0 1px 4px $box-shadow-darker;
+      transition: transform $easing $speed;
+
+      &:hover {
+        transform: rotate(45deg);
+      }
+    }
+
+    & .link-title {
+      font-size: $size-6;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      min-width: 100px;
+    }
+
+    & .link-description {
+      font-size: $size-7;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      min-width: 100px;
+    }
+
+    @media screen and (max-width: $tablet) {
+      width: 50%;
+    }
+  }
+}
+</style>
+
+
+  <section class="main links-list">
+    <header class="list-header offscreen">
+      <h2 class="list-label">{{ .Title }}</h2>
+    </header>
+    {{ range .Site.Params.links }}
+      <a class="link-item" href="{{ .link }}">
+        <img class="link-avatar" src="{{ .avatar }}" alt="{{ .title }}">
+        <h3 class="link-title">{{ .title }}</h3>
+        <p class="link-description">{{ .description }}</p>
+      </a>
+    {{ end }}
+  </section>
