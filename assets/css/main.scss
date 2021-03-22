@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;600;900&family=Oswald:wght@400;600&display=swap');
+
+:root {
+  --serif-font: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', source-han-serif-sc, FangSong, STFangsong, KaiTi, STKaiti, serif;
+  --sans-font: Oswald, 'Microsoft YaHei', STHeiti, sans-serif;
+  --italic-font: STKaiti, KaiTi, '楷体', SimKai, DFKai-SB, "Georgia";
+  --mono-font: consolas, Menlo, Monaco, "Georgia", "PingFang SC", monospace;
+  --quote-font:'STKaiti', 'KaiTi', '楷体', 'SimKai', 'DFKai-SB', 'NSimSun', serif;
+}
+
 @import "_variables/default.scss";
 
 @import "_common/_core/normalize.scss";
