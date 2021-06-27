@@ -317,7 +317,6 @@ blockquote:after {
 
 .notfound {
 	font-size: 2em;
-	transform: translateY(35vh);
 	text-align: center
 }
 
