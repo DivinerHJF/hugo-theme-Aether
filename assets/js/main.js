@@ -19,18 +19,17 @@ jQuery(function($) {
 
     }
 
-    /*页面不在前台时显示的字符
+    /*页面不在前台时显示的字符*/
     _Blog.changeTitle = function() {
-        var currentTitle = document.title;
-        window.onblur = function() {
-            document.title = 'I miss you!（＞﹏＜）';
-        }
-        window.onfocus = function() {
-            document.title = currentTitle;
-        }
-    };
-    */
-    
+      var currentTitle = document.title;
+      window.onblur = function() {
+          /*document.title = 'I miss you!（＞﹏＜）';*/
+          document.title = currentTitle;
+      }
+      window.onfocus = function() {
+          document.title = currentTitle;
+      }
+  };
 
     _Blog.toggleTheme = function() {
         const currentTheme = window.localStorage && window.localStorage.getItem('theme')
