@@ -46,7 +46,7 @@
   {{ end }}
   {{ partial "seo_schema" . }}
 
-  <!--自动匹配系统黑暗模式-->
+  <!--自动匹配系统黑暗模式 start
   <style>
     @media (prefers-color-scheme: dark) {
       html {
@@ -57,6 +57,7 @@
       }
     }
   </style>
+  自动匹配系统黑暗模式 end-->
 </head>
 {{ $cdn_url := ""}}
   {{ if eq ( getenv "HUGO_ENV" ) "production" }}
