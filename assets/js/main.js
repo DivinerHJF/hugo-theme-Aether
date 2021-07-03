@@ -19,6 +19,7 @@ jQuery(function($) {
 
     }
 
+    /*页面不在前台时显示的字符
     _Blog.changeTitle = function() {
         var currentTitle = document.title;
         window.onblur = function() {
@@ -28,6 +29,8 @@ jQuery(function($) {
             document.title = currentTitle;
         }
     };
+    */
+    
 
     _Blog.toggleTheme = function() {
         const currentTheme = window.localStorage && window.localStorage.getItem('theme')
