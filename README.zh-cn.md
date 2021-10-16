@@ -221,3 +221,19 @@ DoIt 主题中用到了以下项目，感谢它们的作者：
 https://www.buymeacoffee.com/PCloud
 
 谢谢! ❤️
+
+## 使用本主题 - **安装** 
+
+``` bash 
+$ git submodule add https://github.com/DivinerHJF/hugo-theme-aether.git themes/aether 
+``` 
+
+- **开启** 
+
+将 `theme = "aether"` 加入到 `config.toml` 中。 
+
+- **更新** 
+
+``` bash 
+git submodule update --recursive --remote 
+```
