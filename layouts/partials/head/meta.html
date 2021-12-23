@@ -13,3 +13,6 @@
 {{- with .Site.Params.app.tileColor -}}
     <meta name="msapplication-TileColor" content="{{ . }}">
 {{- end -}}
+
+<!-- about 页面解决豆瓣图片防盗链不显示问题 -->
+<meta name="referrer" content="never">
