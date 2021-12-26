@@ -56,7 +56,7 @@
                             {{- .Title -}}
                         </a>
                         <span class="archive-item-date">
-                            {{- $.Site.Params.list.dateFormat | default "01-02" | .Date.Format -}}
+                            {{- .Date.Format "1月02日" -}}
                         </span>
                     </article>
                 {{- end -}}
