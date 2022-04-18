@@ -38,3 +38,18 @@
     font-size: 13px;
 }
 
+
+// 视频 iframe 专用
+.video-container {
+	position: relative; 
+    width: 100%; 
+    padding-top: calc(100% * 1080 / 1920); 
+    border: 2px black solid;
+}
+
+.video-container iframe {
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    top: 0;
+}
