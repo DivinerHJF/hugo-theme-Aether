@@ -157,6 +157,7 @@
 
     a {
       @include overflow-wrap(break-word);
+      border-bottom: 1px dashed;
 
       [theme=dark] & b, [theme=dark] & strong {
         color: $single-link-color-dark;
