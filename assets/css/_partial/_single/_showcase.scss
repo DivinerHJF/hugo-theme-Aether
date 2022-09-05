@@ -12,7 +12,7 @@ $showcase-hover-color-black: #ffffff;
 
 .showcase-box {
     width: 48%;
-    height: 370px;
+    height: 320px;
     margin: 1% 0% 0% 0%;
     display: inline-block !important;
     background: $showcase-background-color;
@@ -41,10 +41,10 @@ $showcase-hover-color-black: #ffffff;
     @include transition(transform 0.4s ease);
 
     img {
-        width: 96%;
-        margin: 2% 2% 0% 2%;
+        width: 98%;
+        margin: 1% 2% 0% 1%;
         border-radius: 5px;
-        height: 200px;
+        height: 250px;
         max-width: none;
         @include object-fit(none);
     }
@@ -94,15 +94,9 @@ $showcase-hover-color-black: #ffffff;
     text-overflow: ellipsis;
     overflow: hidden;
     margin: 2%;
-    top: 250px;
+    top: 255px;
     height: 70px;
     width: 96%;
-}
-
-.showcase-link {
-    position: absolute;
-    bottom: 2%;
-    left: 2%;
 }
 
 @media screen and (max-width: 600px) {
