@@ -441,7 +441,7 @@ researchgate:
 # 056: Mastodon
 mastodon:
   Weight: 56
-  Prefix: https://mastodon.social/
+  Prefix: https://fosstodon.org/
   Title: Mastodon
   Icon:
     Class: fab fa-mastodon fa-fw
@@ -516,7 +516,6 @@ ko-fi:
   Title: Ko-Fi
   Icon:
     Simpleicons: ko-fi
-
 
 # 066: Email
 email:
