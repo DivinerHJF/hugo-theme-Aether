@@ -30,6 +30,7 @@ html {
 }
 
 ::selection {
+  color: #fff;
   background-color: $selection-color;
 
   [theme=dark] & {

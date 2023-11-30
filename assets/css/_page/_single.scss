@@ -127,19 +127,29 @@
     }
 
     > h2 > .header-mark::before {
+      position: absolute;
+      left: -1rem;
       content: "#";
+      font-size: 1.2rem;
     }
 
     > h3 > .header-mark::before {
-      content: "##";
+      position: absolute;
+      left: -1rem;
+      content: "";
+      font-size: 1.2rem;
     }
 
     > h4 > .header-mark::before {
-      content: "###";
+      position: absolute;
+      left: -1rem;
+      content: "";
+      font-size: 1.2rem;
     }
 
     p {
       margin: .5rem 0;
+      text-align: justify;
     }
 
     b, strong {
@@ -181,6 +191,7 @@
     ul, ol {
       margin: .5rem 0;
       padding-left: 2.5rem;
+      text-align: justify;
     }
 
     ul {

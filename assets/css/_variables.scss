@@ -10,7 +10,7 @@ $global-font-weight: normal;
 $global-line-height: 1.8rem;
 
 // Color of the background
-$global-background-color: #fff !default;
+$global-background-color: #f7f7f7 !default;
 $global-background-color-dark: #292a2d !default;
 $global-background-color-black: #000000 !default;
 
@@ -50,7 +50,7 @@ $scrollbar-hover-color: #a9a9b3 !default;
 
 // ========== Selection ========== //
 // Color of the selected text
-$selection-color: rgba(53, 166, 247, 0.25) !default;
+$selection-color: #000000d1 !default;
 $selection-color-dark: rgba(50, 112, 194, 0.4) !default;
 $selection-color-black: rgba(50, 112, 194, 0.4) !default;
 // ========== Selection ========== //
