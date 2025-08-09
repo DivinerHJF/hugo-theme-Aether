@@ -55,6 +55,11 @@
 
     {{- /* Load JavaScript scripts and CSS */ -}}
     {{- partial "assets.html" . -}}
+
+    {{ if not .Site.IsServer }} 
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+{{ end }}
 </body>
 
 </html>
