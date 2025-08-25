@@ -234,13 +234,13 @@ header {
 
       a.active {
         font-weight: 900;
-        color: $header-hover-color;
+        color: $header-active-color;
 
         [theme=dark] & {
-          color: $header-hover-color-dark;
+          color: $header-active-color-dark;
         }
         [theme=black] & {
-          color: $header-hover-color-black;
+          color: $header-active-color-black;
         }
       }
     }

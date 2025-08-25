@@ -5,9 +5,9 @@
 // ========== Global ========== //
 // Font and Line Height
 $global-font-family: "KingHwa_OldSong"," LxgwWenKai","LxgwWenKai","JetBrains Mono",monospace !default;
-$global-font-size: 12pt;
-$global-font-weight: normal;
-$global-line-height: 1.8rem;
+$global-font-size: 1rem !default;
+$global-font-weight: normal !default;
+$global-line-height: 1.8rem !default;
 
 // Color of the background
 $global-background-color: #dfdfdf !default;
@@ -35,7 +35,7 @@ $global-link-hover-color-dark: #fff !default;
 $global-link-hover-color-black: #fff !default;
 
 // Color of the border
-$global-border-color: #f0f0f0 !default;
+$global-border-color: #b1b1b1 !default;
 $global-border-color-dark: #363636 !default;
 $global-border-color-black: #363636 !default;
 // ========== Global ========== //
@@ -68,10 +68,10 @@ $header-background-color-black: #000000 !default;
 $header-title-font-family: $global-font-family !default;
 $header-title-font-size: 1.5rem !default;
 
-// Color of the hover header item
-$header-hover-color: #161209 !default;
-$header-hover-color-dark: #fff !default;
-$header-hover-color-black: #fff !default;
+// Color of the active header menu item
+$header-active-color: #c9af72 !default;
+$header-active-color-dark: #fff !default;
+$header-active-color-black: #fff !default;
 
 // Color of the search background
 $search-background-color: #e9e9e9 !default;
@@ -85,9 +85,6 @@ $toc-title-font-size: 1.2rem !default;
 $toc-content-font-size: 1rem !default;
 
 // Color of the single link
-// $single-link-color: #2d96bd !default;
-// $single-link-color-dark: #55bde2 !default;
-// $single-link-color-black: #55bde2 !default;
 $single-link-color: #161209 !default;
 $single-link-color-dark: #a9a9b3 !default;
 $single-link-color-black: #d9d9d9 !default;
@@ -98,14 +95,14 @@ $single-link-hover-color-dark: #bdebfc !default;
 $single-link-hover-color-black: #bdebfc !default;
 
 // Color of the table background
-$table-background-color: #fff !default;
-$table-background-color-dark: #272c34 !default;
-$table-background-color-black: #272c34 !default;
+$table-background-color: #efefef !default; 
+$table-background-color-dark: #313236 !default; 
+$table-background-color-black: #313236 !default;
 
 // Color of the table thead
-$table-thead-color: #ededed !default;
-$table-thead-color-dark: #20252b !default;
-$table-thead-color-black: #20252b !default;
+$table-thead-color: #e9e9e9 !default; 
+$table-thead-color-dark: #27282b !default; 
+$table-thead-color-black: #27282b !default;
 
 // ========== Single Content ========== //
 
