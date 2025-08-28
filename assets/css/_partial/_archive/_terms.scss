@@ -74,6 +74,36 @@
   }
 }
 
+/* --- 标签美化 CSS 代码 (紧凑版) --- */
+
+.archive-item-tags {
+    margin-left: 0.8em; /* 您可以调整这个数值来改变距离 */
+}
+
+/* 标签徽章的基础样式 */
+.archive-item-tags a {
+    display: inline-block;
+    padding: 1px 5px;      /* 减小了内边距，让背景块更紧凑 */
+    margin: 0 1px 1px 0;   /* 徽章之间的间距 */
+    border-radius: 10px;   /* 稍微减小圆角以匹配新的尺寸 */
+    font-size: 0.7em;     /* 字体大小 */
+    line-height: 1.5;      /* 增加行高改善垂直居中感 */
+    color: #fff !important;/* 文字颜色 */
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.archive-item-tags a:hover {
+    transform: scale(1.05); /* 鼠标悬停时轻微放大 */
+}
+
+/* 颜色部分保持不变 */
+.archive-item-tags a:nth-child(5n + 1) { background-color: #7ab5d8; }
+.archive-item-tags a:nth-child(5n + 2) { background-color: #82c9a1; }
+.archive-item-tags a:nth-child(5n + 3) { background-color: #f2a063; }
+.archive-item-tags a:nth-child(5n + 4) { background-color: #d87a7a; }
+.archive-item-tags a:nth-child(5n + 5) { background-color: #a881c2; }
+
 .archive-item-date {
   width: 6em;
   text-align: right;

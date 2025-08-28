@@ -24,9 +24,20 @@
                 <h3 class="group-title">{{ .Key }}</h3>
                 {{- range .Pages -}}
                     <article class="archive-item">
-                        <a href="{{ .RelPermalink }}" class="archive-item-link">
-                            {{- .Title -}}
-                        </a>
+                        <!-- 将标题和标签包裹在一个 div 中，以解决 flex 布局问题 -->
+                        <div>
+                            <a href="{{ .RelPermalink }}" class="archive-item-link">
+                                {{- .Title -}}
+                            </a>
+                            {{- /* 显示文章标签 */ -}}
+                            {{- with .Params.tags -}}
+                                <span class="archive-item-tags">
+                                {{- range . -}}
+                                    <a href="{{ (printf "tags/%s" (. | urlize)) | relLangURL }}" style="text-decoration: none; color: inherit;">#{{ . }}</a>&nbsp;
+                                {{- end -}}
+                                </span>
+                            {{- end -}}
+                        </div>
                         <span class="archive-item-date">
                             {{- .Date.Format "1月02日" -}}
                         </span>
