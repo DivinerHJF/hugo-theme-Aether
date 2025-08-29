@@ -117,6 +117,15 @@
   }
 }
 
+/* --- 移动端响应式调整 --- */
+@media (max-width: 768px) {
+    /* 选中标签和日期这两个元素 */
+    .archive-item-tags,
+    .archive-item-date {
+        display: none; /* 将它们彻底隐藏 */
+    }
+}
+
 .more-post {
   text-align: right;
 }
