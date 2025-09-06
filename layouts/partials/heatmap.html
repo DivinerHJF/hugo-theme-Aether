@@ -1,129 +1,158 @@
 <div id="heatmap" style="
   max-width: 600px;
-  height: 180px;
+  height: 140px;
   padding: 2px;
   margin: 0 auto;"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.min.js"></script>
+
 <script type="text/javascript">
-  var chartDom = document.getElementById('heatmap');
-
-  if(document.body.getAttribute('theme') === 'light'){
-    var myChart = echarts.init(chartDom, 'light');
-  } else {
-    var myChart = echarts.init(chartDom, 'dark');
-  }
-  
-  window.onresize = function() {
-      myChart.resize();
-  };
-  var option;
-
-  // echart heatmap data seems to only support two elements tuple
-  // it doesn't render when each item has 3 value
-  // it also only pass first 2 elements when reading event param
-  // so here we build a map to store additional metadata like link and title
-  // map format {date: [wordcount, link, title]}
-  // for more information see https://blog.douchi.space/hugo-blog-heatmap
-  var dataMap = new Map();
-  {{- range .Site.RegularPages -}}
-    {{- if eq .Section "posts" -}}
-      <!-- 在这里使用 . 参数，表示当前文章 -->
-      var key = {{ .Date.Format "2006-01-02" }};
-      var value = dataMap.get(key);
-      var wordCount = {{ div .WordCount 1000.0 | lang.FormatNumber 1 }};
-      var link = {{ .RelPermalink}};
-      var title = {{ .Title }};
+  // 监听 DOM 加载完成事件，确保在执行脚本时 #heatmap 元素已存在
+  document.addEventListener("DOMContentLoaded", function () {
     
-      // multiple posts in same day, chose the longer one
-      // can also store all posts and use sum as value, but seems like an overkill
-      if (value == null || wordCount > value[0]) {
-        dataMap.set(key, {wordCount, link, title});
-      }
+    // 获取图表容器
+    var chartDom = document.getElementById('heatmap');
+    // 如果当前页面没有此容器，则终止脚本，避免报错
+    if (!chartDom) return;
+
+    // --- 主题适配 ---
+    // 判断当前主题是亮色还是暗色
+    var isLightTheme = document.body.getAttribute('theme') === 'light';
+    var myChart = echarts.init(chartDom, isLightTheme ? 'light' : 'dark');
+    var textColor = isLightTheme ? '#666' : '#ccc';
+    
+    // 监听窗口大小变化，使图表自适应
+    window.onresize = function() {
+      myChart.resize();
+    };
+
+    // --- 数据准备 (由 Hugo 模板在网站构建时动态生成) ---
+    // 创建一个 Map 来存储文章数据，键为 "YYYY-MM-DD" 格式的日期
+    var dataMap = new Map();
+    {{- range .Site.RegularPages -}}
+      {{- if eq .Section "posts" -}}
+        var key = {{ .Date.Format "2006-01-02" }};
+        var value = dataMap.get(key);
+        // 【优化】直接输出数字(单位:千字)，避免因语言环境(如小数点变逗号)导致 NaN 问题
+        var wordCount = {{ div .WordCount 1000.0 }}; 
+        var link = {{ .RelPermalink }};
+        var title = {{ .Title }};
+      
+        // 如果当天已有多篇文章，只保留字数最多的那一篇
+        // 【修正】修正了 value[0] 的错误判断逻辑
+        if (value == null || wordCount > value.wordCount) {
+          dataMap.set(key, {wordCount, link, title});
+        }
+      {{- end -}}
     {{- end -}}
-  {{- end -}}
 
-  var data = [];
-  for (const [key, value] of dataMap.entries()) {
-    data.push([key, value.wordCount]);
-  }
-  
-  var startDate = new Date();
-  var year_Mill = startDate.setFullYear((startDate.getFullYear() - 1));
-  var startDate = +new Date(year_Mill);
-  var endDate = +new Date();
-
-  var dayTime = 3600 * 24 * 1000;
-  startDate = echarts.format.formatTime('yyyy-MM-dd', startDate);
-  endDate = echarts.format.formatTime('yyyy-MM-dd', endDate);
-
-  // change date range according to months we want to render
-  function heatmap_width(months){             
-    var startDate = new Date();
-    var mill = startDate.setMonth((startDate.getMonth() - months));
-    var endDate = +new Date();
-    startDate = +new Date(mill);
-
-    endDate = echarts.format.formatTime('yyyy-MM-dd', endDate);
-    startDate = echarts.format.formatTime('yyyy-MM-dd', startDate);
-
-    var showmonth = [];
-    showmonth.push([
-        startDate,
-        endDate
-    ]);
-    return showmonth
-  };
-
-  function getRangeArr() {
-    const windowWidth = window.innerWidth;
-    if (windowWidth >= 600) {
-      return heatmap_width(12);
-    } else if (windowWidth >= 400) {
-      return heatmap_width(9);
-    } else {
-      return heatmap_width(6);
+    // 将 Map 中的数据转换为 ECharts 热力图需要的 [日期, 值] 数组格式
+    var data = [];
+    for (const [key, value] of dataMap.entries()) {
+      data.push([key, value.wordCount]);
     }
-  }
+    
+    // --- 动态计算总结信息与颜色映射最大值 ---
+    var postCount = dataMap.size;
+    var totalWordCountInThousands = 0;
+    // 【新增】初始化最大字数变量
+    var maxWordCount = 0; 
 
-  option = {
-    backgroundColor: 'transparent',
-    title: {
-        top: 0,
-        left: 'center',
-        text: '博客废话产量'
-    },
-    tooltip: {
-      formatter: function (p) {
-        const post = dataMap.get(p.data[0]);
-        return p.data[0] + ' | ' +post.title + ' | ' + post.wordCount + ' 千字';
+    // 遍历 dataMap，在累加总字数的同时，找出单篇最大字数
+    for (const value of dataMap.values()) {
+      var currentWordCount = parseFloat(value.wordCount) || 0;
+      totalWordCountInThousands += currentWordCount;
+      
+      // 【新增】如果当前文章字数更大，则更新最大值
+      if (currentWordCount > maxWordCount) {
+        maxWordCount = currentWordCount;
       }
-    },
-    visualMap: {
+    }
+
+    // 【新增】将最大值向上取整，让图例的颜色刻度更美观 (例如 8.2 会变成 9)
+    var visualMapMax = Math.ceil(maxWordCount);
+
+    var totalWordCountInTenThousands = (totalWordCountInThousands / 10).toFixed(1);
+    var summaryText = '博文：' + postCount + ' 篇 | 累计字数：' + totalWordCountInTenThousands + ' 万字';
+
+    // 根据窗口宽度动态调整热力图显示的时间范围
+    function heatmap_width(months){             
+      var startDate = new Date();
+      var mill = startDate.setMonth((startDate.getMonth() - months));
+      var endDate = +new Date();
+      startDate = +new Date(mill);
+      endDate = echarts.format.formatTime('yyyy-MM-dd', endDate);
+      startDate = echarts.format.formatTime('yyyy-MM-dd', startDate);
+      var showmonth = [];
+      showmonth.push([
+          startDate,
+          endDate
+      ]);
+      return showmonth
+    };
+    function getRangeArr() {
+      const windowWidth = window.innerWidth;
+      if (windowWidth >= 600) {
+        return heatmap_width(12);
+      } else if (windowWidth >= 400) {
+        return heatmap_width(9);
+      } else {
+        return heatmap_width(6);
+      }
+    }
+
+    // --- ECharts 核心配置 ---
+    var option = {
+      // 背景色设为透明以融入页面
+      backgroundColor: 'transparent',
+
+      // 【修改】标题(title)已被移除
+
+      // 鼠标悬浮时的提示框
+      tooltip: {
+        formatter: function (p) {
+          const post = dataMap.get(p.data[0]);
+          // 在提示框中将字数（单位:千字）格式化为一位小数
+          return p.data[0] + ' | ' + post.title + ' | ' + post.wordCount.toFixed(1) + ' 千字';
+        }
+      },
+
+      // 视觉映射组件，用于根据数值大小映射颜色
+      visualMap: {
+        // 【修改】图例(legend)已被隐藏
+        show: false,
         min: 0,
-        max: 8,
+        max: visualMapMax, // 可根据您单篇最长文章的字数（千字）来适当调整
         type: 'piecewise',
-        orient: 'horizontal',
-        left: 'center',
-        top: 30,
-        
-        inRange: {   
-          //  [floor color, ceiling color]
+        inRange: { 
           color: ['#7aa8744c', '#7AA874' ] 
         },
-        splitNumber: 4,
-        text: ['千字', ''],
-        showLabel: true,
-        itemGap: 20,
-    },
-    calendar: {
-        top: 80,
+      },
+      
+      // 【新增】图形元素组件，用于在左下角显示总结信息
+      graphic: {
+          type: 'text',     // 元素类型：文本
+          left: 20,         // 定位：距离图表左侧 20px
+          bottom: 5,        // 定位：距离图表底部 5px
+          style: {
+              text: summaryText,     // 绑定的文本内容
+              textAlign: 'left',
+              fill: textColor,       // 文本颜色（已做主题适配）
+              fontSize: 12
+          }
+      },
+
+      // 日历坐标系配置
+      calendar: {
+        // 【修改】调整了上下边距，为移除的标题和新增的说明文字优化布局
+        top: 20,
+        bottom: 30, // 为底部的说明文字留出空间
         left: 20,
         right: 4,
         cellSize: ['auto', 12],
         range: getRangeArr(),
         itemStyle: {
-            color: '#F1F1F100',
+            color: '#F1F1F100', // 背景方块颜色
             borderWidth: 0.3,
         },
         yearLabel: { show: false },
@@ -136,19 +165,30 @@
             type: 'dashed'
           }
         }
-    },
-    series: {
+      },
+
+      // 热力图系列配置
+      series: {
         type: 'heatmap',
         coordinateSystem: 'calendar',
         data: data,
-    }
-  };
-  myChart.setOption(option);
-  myChart.on('click', function(params) {
-    if (params.componentType === 'series') {
-      const post = dataMap.get(params.data[0]);
-      const link = window.location.origin + post.link;
-      window.open(link, '_blank').focus();
-    }
-});
-</script> 
+      }
+    };
+
+    // 将配置项设置到图表实例中
+    myChart.setOption(option);
+
+    // --- 图表交互事件 ---
+    // 点击热力图方块时，在新标签页打开对应的文章链接
+    myChart.on('click', function(params) {
+      if (params.componentType === 'series') {
+        const post = dataMap.get(params.data[0]);
+        if (post && post.link) {
+          const link = window.location.origin + post.link;
+          window.open(link, '_blank').focus();
+        }
+      }
+    });
+
+  });
+</script>
