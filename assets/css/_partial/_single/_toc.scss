@@ -128,6 +128,7 @@
   max-width: 0;
   // --- 优化: 增加内边距, 让内容有呼吸空间 ---
   padding: 0 1rem;
+  border: 1px solid #b1b1b1;
   border-left: 3px solid $global-border-color; // 边框稍微细一点
   @include overflow-wrap(break-word);
   box-sizing: border-box;
