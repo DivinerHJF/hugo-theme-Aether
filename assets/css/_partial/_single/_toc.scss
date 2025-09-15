@@ -1,3 +1,12 @@
+// --- 变量定义 (假设这些变量已在别处定义) ---
+// $toc-title-font-size: 1.1em;
+// $toc-content-font-size: 0.9em;
+// $single-link-color: #333;
+// $single-link-hover-color: #007bff;
+// $global-border-color: #eee;
+// ... 以及对应的 dark 和 black 主题变量
+
+// --- 通用 TOC 基础样式 ---
 .toc {
   .toc-title {
     font-size: $toc-title-font-size;
@@ -8,31 +17,85 @@
   .toc-content {
     font-size: $toc-content-font-size;
 
+    // --- 移除 text-indent, 使用更现代的 Flexbox/Grid 或伪元素布局 ---
     ul {
-      text-indent: -0.85rem;
-      padding-left: .8rem;
+      padding-left: 0; // 重置内边距, 在 a 标签上控制
       list-style: none;
 
-      a:first-child::before {
-        content: "○";
-        font-weight: bolder;
-        margin-right: .5rem;
-        color: $single-link-color;
+      a {
+        // --- 优化: 将 a 标签设为块级或行内块, 方便添加 padding 和 hover 背景 ---
+        display: block;
+        padding: 0 0; // --- 调整这里 (1): 减小链接的上下内边距来缩小行距 ---
+        position: relative;
+        padding-left: 1.35rem; // 为伪元素留出空间
+        text-decoration: none; // 确保没有下划线
+        transition: color 0.2s, background-color 0.2s; // 平滑过渡
 
-        [theme=dark] & {
-          color: $single-link-color-dark;
-        }
-        [theme=black] & {
-          color: $single-link-color-black;
+        // --- 新增: 鼠标悬停效果 ---
+        &:hover {
+          color: $single-link-hover-color;
+          background-color: rgba($global-border-color, 0.5); // 添加一个淡淡的背景色
+          border-radius: 4px;
+
+          [theme=dark] & {
+            color: $single-link-hover-color-dark;
+            background-color: rgba($global-border-color-dark, 0.2);
+          }
+          [theme=black] & {
+            color: $single-link-hover-color-black;
+            background-color: rgba($global-border-color-black, 0.2);
+          }
         }
       }
 
+      // --- 优化: 使用 > 选择器区分层级 ---
+      // Level 1
+      > li > a::before {
+        content: "●"; // 使用实心圆点作为一级标记
+        font-weight: bolder;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $single-link-color;
+        [theme=dark] & { color: $single-link-color-dark; }
+        [theme=black] & { color: $single-link-color-black; }
+      }
+
       ul {
-        padding-left: 1.5rem;
+        padding-left: 1rem; // 子列表的缩进
+        // --- 调整这里 (2): 减小层级之间的垂直间距 ---
+        // margin-top: 0.1rem;
+        // margin-bottom: 0.1rem;
+
+        // --- 新增: 视觉引导线 ---
+        position: relative;
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0.35rem; // 调整线的位置
+          top: 0.5rem;
+          bottom: 0.5rem;
+          width: 1px;
+          background-color: $global-border-color;
+          [theme=dark] & { background-color: $global-border-color-dark; }
+          [theme=black] & { background-color: $global-border-color-black; }
+        }
+
+        // Level 2
+        > li > a::before {
+          content: "○"; // 使用空心圆点
+        }
+
+        // Level 3 (如果需要)
+        ul > li > a::before {
+          content: "◌"; // 使用更小的空心圆点
+        }
       }
     }
   }
 
+  // --- ruby 样式 ---
   ruby {
     background: $code-background-color;
 
@@ -57,23 +120,23 @@
   }
 }
 
+// --- 浮动目录 ---
 #toc-auto {
   display: block;
   position: absolute;
   width: $MAX_LENGTH;
   max-width: 0;
-  padding: 0 .8rem;
-  border-left: 4px solid $global-border-color;
+  // --- 优化: 增加内边距, 让内容有呼吸空间 ---
+  padding: 0 1rem;
+  border-left: 3px solid $global-border-color; // 边框稍微细一点
   @include overflow-wrap(break-word);
   box-sizing: border-box;
   top: 10rem;
   left: 0;
   visibility: hidden;
 
-  [header-desktop=normal] & {
-    top: 5rem;
-  }
-
+  // --- 新增: 半透明背景, 提升可读性 ---
+  border-radius: 0 8px 8px 0; // 右侧添加圆角
   @include blur;
 
   [theme=dark] & {
@@ -83,11 +146,39 @@
     border-left-color: $global-border-color-black;
   }
 
+  [header-desktop=normal] & {
+    top: 5rem;
+  }
+
   .toc-title {
-    margin: .8rem 0;
+    margin: 1rem 0;
   }
 
   .toc-content {
+    ul {
+      // --- 优化: 为 active 状态的伪元素也应用高亮颜色 ---
+      a.active {
+        font-weight: bold;
+        color: $single-link-hover-color; // 使用 hover 颜色以示强调
+        [theme=dark] & { color: $single-link-hover-color-dark; }
+        [theme=black] & { color: $single-link-hover-color-black; }
+
+        &::before {
+          color: $single-link-hover-color;
+          [theme=dark] & { color: $single-link-hover-color-dark; }
+          [theme=black] & { color: $single-link-hover-color-black; }
+        }
+      }
+
+      .has-active > ul {
+        display: block;
+      }
+
+      ul {
+        display: none;
+      }
+    }
+
     &.always-active ul {
       display: block;
     }
@@ -95,45 +186,19 @@
     > nav > ul {
       margin: .625rem 0;
     }
-
-    ul {
-      ul {
-        display: none;
-      }
-
-      .has-active > ul {
-        display: block;
-      }
-    }
-
-    a.active {
-      font-weight: bold;
-      color: $single-link-color;
-
-      [theme=dark] & {
-        color: $single-link-color-dark;
-      }
-      [theme=black] & {
-        color: $single-link-color-black;
-      }
-
-      &::before {
-        color: $single-link-hover-color;
-
-        [theme=dark] & {
-          color: $single-link-hover-color-dark;
-        }
-        [theme=black] & {
-          color: $single-link-hover-color-black;
-        }
-      }
-    }
   }
 }
 
+// --- 静态目录 (页面内) ---
 #toc-static {
   display: none;
-  margin: .8rem 0;
+  margin: 1.5rem 0; // 增加上下边距
+  border: 1px solid $global-border-color; // --- 优化: 使用边框代替背景色, 更简洁
+  border-radius: 8px;
+  overflow: hidden; // 配合圆角
+
+  [theme=dark] & { border-color: $global-border-color-dark; }
+  [theme=black] & { border-color: $global-border-color-black; }
 
   &[kept=true] {
     display: block;
@@ -143,43 +208,21 @@
     display: flex;
     justify-content: space-between;
     line-height: 2em;
-    padding: 0 .75rem;
-    background: darken($code-background-color, 6%);
+    padding: 0.5rem 1rem;
+    background: $code-background-color;
+    cursor: pointer; // --- 新增: 表明标题可点击
 
-    [theme=dark] & {
-      background: darken($code-background-color-dark, 6%);
-    }
-    [theme=black] & {
-      background: darken($code-background-color-black, 6%);
-    }
+    [theme=dark] & { background: $code-background-color-dark; }
+    [theme=black] & { background: $code-background-color-black; }
   }
 
   .toc-content {
-    background-color: $code-background-color;
+    background-color: transparent; // --- 优化: 移除背景色, 使其与文章背景一致
 
     > nav > ul {
       margin: 0;
-      padding: .4rem 1rem .4rem 1.8rem;
-    }
-
-    [theme=dark] & {
-      background-color: $code-background-color-dark;
-    }
-    [theme=black] & {
-      background-color: $code-background-color-black;
-    }
-  }
-
-  &.open {
-    .toc-title {
-      background: darken($code-background-color, 3%);
-
-      [theme=dark] & {
-        background: darken($code-background-color-dark, 3%);
-      }
-      [theme=black] & {
-        background: darken($code-background-color-black, 3%);
-      }
+      padding: .8rem 1rem .8rem 1rem; // 统一内边距
     }
   }
 }
+
