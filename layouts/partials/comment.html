@@ -202,6 +202,28 @@
                 Please enable JavaScript to view the comments powered by <a href="https://twikoo.js.org/">Twikoo</a>.
             </noscript>
         {{- end -}}
+
+        {{/* giscus Twikoo Comment System */}}
+        {{- with site.Params.page.comment.giscus -}}
+            {{- if .enable -}}
+                <script src="https://giscus.app/client.js"
+                        data-repo="{{ .dataRepo }}"
+                        data-repo-id="{{ .dataRepoId }}"
+                        data-category="{{ .dataCategory }}"
+                        data-category-id="{{ .dataCategoryId }}"
+                        data-mapping="{{ .dataMapping }}"
+                        data-strict="0"
+                        data-reactions-enabled="{{ .dataReactionsEnabled }}"
+                        data-emit-metadata="{{ .dataEmitMetadata }}"
+                        data-input-position="top"
+                        data-theme="{{ .dataTheme }}"
+                        data-lang="zh-CN"
+                        data-loading="lazy"
+                        crossorigin="anonymous"
+                        async>
+                </script>
+            {{- end -}}
+        {{- end -}}
         
         {{- /* Vssue Comment System */ -}}
         {{- $vssue := $comment.vssue | default dict -}}
